@@ -13,6 +13,14 @@ class Process:
     affectedDF = None
     handleDF = None
 
+    '''
+    Sanitises the data
+    
+    Parameters:
+    state: State name
+    Returns:
+    Cleaned Name
+    '''
     def __sanitise(self, state):
         try:
             idx = state.index("*")
@@ -20,6 +28,14 @@ class Process:
         except:
             return state
 
+    '''
+    Loads Dataset
+    
+    Parameters:
+    key: API Key
+    Returns:
+    List of data
+    '''
     def __load_dataset(self, key):
 
         url = "https://covid-19-india2.p.rapidapi.com/details.php"
@@ -51,6 +67,13 @@ class Process:
 
         return dataList
 
+    
+    '''
+    Create Dataframe
+    
+    Parameters:
+    dataList: List of data
+    '''
     def __create_dataframe(self, dataList):
         self.spark = SparkSession.builder.master(
             'local[2]').appName('Assignment').getOrCreate()
@@ -58,7 +81,10 @@ class Process:
         schema = StructType([StructField('SNo', StringType()), StructField('State', StringType()), StructField(
             'Confirm', LongType()), StructField('Cured', LongType()), StructField('Death', LongType()), StructField('Total', LongType())])
         self.dataDF = self.spark.createDataFrame(data=dataList, schema=schema)
-
+    
+    '''
+    Loads dataframe
+    '''
     def __load_dataframe(self):
         load_dotenv()
         key = os.getenv("API_KEY")
