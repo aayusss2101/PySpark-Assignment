@@ -1,9 +1,13 @@
 from process import Process
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 # Flask app
 app = Flask(__name__)
 
+# Home Route
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 # Route for Most Affected
 @app.route('/affected/most', methods=['GET'])
